@@ -1,5 +1,7 @@
 <?php
 
+use App\Helpers\Telegram;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (Telegram $telegram) {
+    $telegram->send_message(config('telegram.chat_id'), 'fsfsdfsd');
 });

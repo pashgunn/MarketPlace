@@ -2,7 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\Telegram;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Http;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -10,7 +13,7 @@ class Handler extends ExceptionHandler
     /**
      * A list of exception types with their corresponding custom log levels.
      *
-     * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
+     * @var array<class-string<\Throwable>, LogLevel::*>
      */
     protected $levels = [
         //
@@ -36,6 +39,14 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
+    protected Telegram $telegram;
+
+    public function __construct(Container $container, Telegram $telegram)
+    {
+        parent::__construct($container);
+        $this->telegram = $telegram;
+    }
+
     /**
      * Register the exception handling callbacks for the application.
      *
@@ -44,7 +55,12 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            //
+            $data = [
+                'description' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ];
+            $this->telegram->send_message(config('telegram.chat_id'), (string)view('report', $data));
         });
     }
 }
