@@ -29,4 +29,35 @@ class Telegram
         ]);
     }
 
+    public function edit_message(int $chat_id, string $message, $message_id)
+    {
+        return $this->http::post($this->url . $this->bot . "/editMessageText", [
+            'chat_id' => $chat_id,
+            'text' => $message,
+            'parse_mode' => 'html',
+            'message_id' => $message_id,
+        ]);
+    }
+
+    public function send_buttons(int $chat_id, string $message, $button)
+    {
+        return $this->http::post($this->url . $this->bot . "/sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => $message,
+            'parse_mode' => 'html',
+            'reply_markup' => $button,
+        ]);
+    }
+
+    public function edit_buttons(int $chat_id, string $message, $button, $message_id)
+    {
+        return $this->http::post($this->url . $this->bot . "/editMessageText", [
+            'chat_id' => $chat_id,
+            'text' => $message,
+            'parse_mode' => 'html',
+            'reply_markup' => $button,
+            'message_id' => $message_id,
+        ]);
+    }
+
 }
